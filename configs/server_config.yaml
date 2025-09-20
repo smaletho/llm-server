@@ -4,7 +4,10 @@ model_name: "/workspace/models/mistral-7b-gguf/mistral-7b-instruct-v0.1.Q4_K_M.g
 device:
   gpu_id: 0  # GPU device ID
   n_gpu_layers: -1  # -1 means offload all layers to GPU
-  gpu_memory_utilization: 0.8  # Maximum GPU memory to use (80%)
+  gpu_memory_utilization: 0.9  # Maximum GPU memory utilization (90% for Super)
+  parallel_processing: true  # Enable parallel processing
+  batch_size_tokens: 2048  # Increased batch size for Super version
+  cuda_force_mmv: true  # Force CUDA matrix multiplication optimization
 
 # Model configuration
 model:

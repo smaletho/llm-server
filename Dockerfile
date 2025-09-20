@@ -1,10 +1,16 @@
 # Build stage
 FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 AS builder
 
-# Set build-time variables
-ARG CUDA_ARCHITECTURES="8.7"  # Specific to Orin Nano
-ENV CMAKE_ARGS="-DGGML_CUDA=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}"
+# Set build-time variables for CUDA compilation (Orin Nano Super)
+ENV CUDA_DOCKER_ARCH=87
+ENV CMAKE_ARGS="-DGGML_CUDA=1 -DCMAKE_CUDA_ARCHITECTURES=87-real -DGGML_CUDA_FORCE_DMMV=1 -DGGML_CUDA_MAX_BATCH_SIZE=2048"
 ENV FORCE_CMAKE=1
+ENV LLAMA_CUDA_MMV_Y=1
+
+# Configure CUDA environment for maximum performance
+ENV CUDA_VISIBLE_DEVICES=0
+ENV CUDA_MEMORY_POOL_INIT_SIZE=2048
+ENV CUDA_MEM_POOL_GROWTH_RATE=0.5
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
