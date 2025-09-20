@@ -3,7 +3,7 @@ FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3 AS builder
 
 # Set build-time variables
 ARG CUDA_ARCHITECTURES="8.7"  # Specific to Orin Nano
-ENV CMAKE_ARGS="-DLLAMA_CUBLAS=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES} -DGGML_CUDA=1"
+ENV CMAKE_ARGS="-DGGML_CUDA=1 -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}"
 ENV FORCE_CMAKE=1
 
 # Install build dependencies
@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y \
     git \
     python3-venv \
     python3-dev \
+    cuda-toolkit-12-2 \
+    cuda-tools-12-2 \
+    cuda-libraries-12-2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create and activate virtual environment
