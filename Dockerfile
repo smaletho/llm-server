@@ -29,8 +29,10 @@ RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Build llama-cpp-python with optimized settings
+ENV CUDA_HOME=/usr/local/cuda
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --verbose llama-cpp-python --no-binary llama-cpp-python
+    VERBOSE=1 CMAKE_ARGS="-DLLAMA_CUBLAS=on -DCMAKE_CUDA_ARCHITECTURES=87-real -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc" pip install --no-cache-dir llama-cpp-python --no-binary llama-cpp-python
 
 # Runtime stage
 FROM nvcr.io/nvidia/l4t-ml:r36.2.0-py3

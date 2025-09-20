@@ -1,13 +1,23 @@
 # LLM Server for Jetson Orin Nano
 
-This project implements a FastAPI-based server running the Mistral-7B model optimized for NVIDIA Jetson Orin Nano using GGUF quantization.
+This proje```bash
+# Build using BuildKit with memory limits
+DOCKER_BUILDKIT=1 docker buildx build \
+  --memory=8g \
+  --memory-swap=16g \
+  --build-arg "BUILDKIT_STEP_LOG_MAX_SIZE=10485760" \
+  -t llm-server:latest .lements a FastAPI-based server running the Mistral-7B model optimized for NVIDIA Jetson Orin Nano using GGUF quantization.
 
 ## System Requirements
 
-- NVIDIA Jetson Orin Nano
-- JetPack 5.x or later
+- NVIDIA Jetson Orin Nano Super (p3767-0005)
+- CUDA 12.6 or later
+- cuDNN 9.3 or later
+- Ubuntu 22.04 or later
 - Docker installed
 - At least 8GB swap space configured
+- 6 CPU cores (ARM Cortex-A78AE)
+- Minimum 7.4GB RAM
 
 ## Project Structure
 
@@ -109,9 +119,15 @@ nvidia-smi
 ## Troubleshooting
 
 1. OOM (Out of Memory) during build:
-   - Ensure swap is properly configured
+   - Ensure swap is properly configured (minimum 8GB recommended)
    - Try reducing parallel jobs during build
    - Clear Docker build cache: `docker builder prune`
+   - If build fails with CUDA linking errors, verify CUDA environment:
+     ```bash
+     echo $CUDA_HOME
+     ls -l /usr/local/cuda
+     ldconfig -p | grep cuda
+     ```
 
 2. GPU issues:
    - Verify CUDA support: `docker exec llm-server python3 -c "from llama_cpp import llama_cpp; print(llama_cpp.llama_supports_gpu_offload())"`
