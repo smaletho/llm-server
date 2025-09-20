@@ -1,5 +1,5 @@
 # Build stage
-FROM nvcr.io/nvidia/l4t-ml:r35.2.1-py3 AS builder
+FROM nvcr.io/nvidia/l4t-ml:r36.4.0-py3 AS builder
 
 # Set build-time variables
 ARG CUDA_ARCHITECTURES="8.7"  # Specific to Orin Nano
@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --verbose llama-cpp-python --no-binary llama-cpp-python
 
 # Runtime stage
-FROM nvcr.io/nvidia/l4t-ml:r35.2.1-py3
+FROM nvcr.io/nvidia/l4t-ml:r36.4.0-py3
 
 # Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
